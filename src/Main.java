@@ -1,15 +1,16 @@
-import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Scanner enterValue = new Scanner(System.in);
-		int x = enterValue.nextInt();
-		int y = enterValue.nextInt();
 		
 		FillTheFieldGame fillTheFieldGame = new FillTheFieldGame();
-		fillTheFieldGame.chooseField(x,y);
+		for(int i=0; i<10; i++) {
+			for(int j=0; j<10; j++) {
+				fillTheFieldGame.chooseField(j,i);
+			}
+		}
+		
 		
 	}
 

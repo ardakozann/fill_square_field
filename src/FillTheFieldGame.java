@@ -1,8 +1,10 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class FillTheFieldGame {
 	
-	int [][]backgroundArray = {{3,3,4,5,5,5,5,4,3,3},{3,3,4,5,5,5,5,4,3,3},{4,4,6,7,7,7,7,6,4,4},
+	final int [][]backgroundArray = {{3,3,4,5,5,5,5,4,3,3},{3,3,4,5,5,5,5,4,3,3},{4,4,6,7,7,7,7,6,4,4},
 			{5,5,7,8,8,8,8,7,5,5},{5,5,7,8,8,8,8,7,5,5},{5,5,7,8,8,8,8,7,5,5},{5,5,7,8,8,8,8,7,5,5},
 			{4,4,6,7,7,7,7,6,4,4},{3,3,4,5,5,5,5,4,3,3},{3,3,4,5,5,5,5,4,3,3}};
 	
@@ -20,33 +22,15 @@ public class FillTheFieldGame {
 	public void chooseField(int x, int y) {
 		
 		int [][] game = new int[10][10];
+		int [][] template = {{3,3,4,5,5,5,5,4,3,3},{3,3,4,5,5,5,5,4,3,3},{4,4,6,7,7,7,7,6,4,4},
+				{5,5,7,8,8,8,8,7,5,5},{5,5,7,8,8,8,8,7,5,5},{5,5,7,8,8,8,8,7,5,5},{5,5,7,8,8,8,8,7,5,5},
+				{4,4,6,7,7,7,7,6,4,4},{3,3,4,5,5,5,5,4,3,3},{3,3,4,5,5,5,5,4,3,3}};
 		game = resetSquareField(game);
-		fillSquare(game, x, y);	
-		//x ve y ekseni
-//		for(int y=0; y<=9; y++) {
-//			for(int x=0; x<=9; x++) {
-//				game = resetSquareField(game);
-//				fillSquare(game, x, y);				
-//			}
-//		}
-		
-//		for(int i=0; i<10; i++) {
-//			for(int j=0; j<10; j++) {
-//				if(backgroundArray[i][j] < 10) {
-//					System.out.print(backgroundArray[i][j] + "   ");
-//				}
-//				else if(backgroundArray[i][j] == 100){
-//					System.out.print(backgroundArray[i][j] + " ");
-//				}
-//				else {
-//				System.out.print(backgroundArray[i][j] + "  ");
-//				}
-//			}
-//			System.out.println();
-//		}
+		fillSquare(game, template, x, y);	
 	}
+	
 	//100'ü bulmaya çalışma
-	public void fillSquare (int [][]game, int x, int y) {
+	public void fillSquare (int [][]game, int[][]template, int x, int y) {
 		int number=1;
 		//Sıralama için TreeMap kullanıldı.
 		TreeMap<Integer,String> sortingWays = new TreeMap<Integer,String>();
@@ -54,20 +38,19 @@ public class FillTheFieldGame {
 		while(number <= 100) {
 			//System.out.println(number);
 			game[y][x]=number;
-			backgroundArray[y][x]=-1;
-			decreasePossibilities(x,y);
-			
+			template[y][x]=-1;
+			decreasePossibilities(template,x,y);
 			
 			sortingWays.clear();
 			
-			sortingWays.put(right(x,y), "right");
-			sortingWays.put(left(x,y), "left");
-			sortingWays.put(top(x,y), "top");
-			sortingWays.put(bottom(x,y), "bottom");
-			sortingWays.put(topRight(x,y), "topRight");
-			sortingWays.put(topLeft(x,y), "topLeft");
-			sortingWays.put(bottomRight(x,y), "bottomRight");
-			sortingWays.put(bottomLeft(x,y), "bottomLeft");
+			sortingWays.put(right(template,x,y), "right");
+			sortingWays.put(left(template,x,y), "left");
+			sortingWays.put(top(template,x,y), "top");
+			sortingWays.put(bottom(template,x,y), "bottom");
+			sortingWays.put(topRight(template,x,y), "topRight");
+			sortingWays.put(topLeft(template,x,y), "topLeft");
+			sortingWays.put(bottomRight(template,x,y), "bottomRight");
+			sortingWays.put(bottomLeft(template,x,y), "bottomLeft");
 			
 			if(sortingWays.firstEntry().getValue().equals("right") && sortingWays.firstKey() != 999) {
 				x = x+3;
@@ -107,49 +90,49 @@ public class FillTheFieldGame {
 	
 	//Arka plandaki arrrayden gidebileceği yerlerin ihtimali
 	//Dizide önceden herhangi bir değer atanmışsa, background dizisinde orası -1 olur.
-	public int right(int x, int y) {
-		if(x+3 <= 9 && backgroundArray[y][x+3] != -1) {return backgroundArray[y][x+3];}
+	public int right(int[][] template, int x, int y) {
+		if(x+3 <= 9 && template[y][x+3] != -1) {return template[y][x+3];}
 		else {return 999;}
 	}
-	public int left(int x, int y) {
-		if(x-3 >= 0 && backgroundArray[y][x-3] != -1) {return backgroundArray[y][x-3];}
+	public int left(int[][] template, int x, int y) {
+		if(x-3 >= 0 && template[y][x-3] != -1) {return template[y][x-3];}
 		else {return 999;}
 	}
-	public int top(int x, int y) {
-		if(y-3 >= 0 && backgroundArray[y-3][x] != -1) {return backgroundArray[y-3][x];}
+	public int top(int[][] template, int x, int y) {
+		if(y-3 >= 0 && template[y-3][x] != -1) {return template[y-3][x];}
 		else {return 999;}
 	}
-	public int bottom(int x, int y) {
-		if(y+3 <= 9 && backgroundArray[y+3][x] != -1) {return backgroundArray[y+3][x];}
+	public int bottom(int[][] template, int x, int y) {
+		if(y+3 <= 9 && template[y+3][x] != -1) {return template[y+3][x];}
 		else {return 999;}
 	}
-	public int topRight(int x, int y) {
-		if((x+2 <= 9 && y-2 >= 0) && backgroundArray[y-2][x+2] != -1) {return backgroundArray[y-2][x+2];}
+	public int topRight(int[][] template, int x, int y) {
+		if((x+2 <= 9 && y-2 >= 0) && template[y-2][x+2] != -1) {return template[y-2][x+2];}
 		else {return 999;}
 	}
-	public int topLeft(int x, int y) {
-		if((x-2 >= 0 && y-2 >= 0) && backgroundArray[y-2][x-2] != -1) {return backgroundArray[y-2][x-2];}
+	public int topLeft(int[][] template, int x, int y) {
+		if((x-2 >= 0 && y-2 >= 0) && template[y-2][x-2] != -1) {return template[y-2][x-2];}
 		else {return 999;}
 	}
-	public int bottomRight(int x, int y) {
-		if((x+2 <= 9 && y+2 <= 9) && backgroundArray[y+2][x+2] != -1) {return backgroundArray[y+2][x+2];}
+	public int bottomRight(int[][] template, int x, int y) {
+		if((x+2 <= 9 && y+2 <= 9) && template[y+2][x+2] != -1) {return template[y+2][x+2];}
 		else {return 999;}
 	}
-	public int bottomLeft(int x, int y) {
-		if((x-2 >= 0 && y+2 <= 9) && backgroundArray[y+2][x-2] != -1) {return backgroundArray[y+2][x-2];}
+	public int bottomLeft(int[][] template, int x, int y) {
+		if((x-2 >= 0 && y+2 <= 9) && template[y+2][x-2] != -1) {return template[y+2][x-2];}
 		else {return 999;}
 	}
 	
 	
-	public void decreasePossibilities(int x,int y) {
-		if(x+3 <= 9 && backgroundArray[y][x+3] != -1) {backgroundArray[y][x+3] -=1;}
-		if(x-3 >= 0 && backgroundArray[y][x-3] != -1) {backgroundArray[y][x-3] -=1;}
-		if(y+3 <= 9 && backgroundArray[y+3][x] != -1) {backgroundArray[y+3][x] -=1;}
-		if(y-3 >= 0 && backgroundArray[y-3][x] != -1) {backgroundArray[y-3][x] -=1;}
-		if((x+2 <= 9 && y+2 <= 9) && backgroundArray[y+2][x+2] != -1) {backgroundArray[y+2][x+2] -=1;}
-		if((x+2 <= 9 && y-2 >= 0) && backgroundArray[y-2][x+2] != -1) {backgroundArray[y-2][x+2] -=1;}
-		if((x-2 >= 0 && y+2 <= 9) && backgroundArray[y+2][x-2] != -1) {backgroundArray[y+2][x-2] -=1;}
-		if((x-2 >= 0 && y-2 >= 0) && backgroundArray[y-2][x-2] != -1) {backgroundArray[y-2][x-2] -=1;}
+	public void decreasePossibilities(int[][] template,int x,int y) {
+		if(x+3 <= 9 && template[y][x+3] != -1) {template[y][x+3] -=1;}
+		if(x-3 >= 0 && template[y][x-3] != -1) {template[y][x-3] -=1;}
+		if(y+3 <= 9 && template[y+3][x] != -1) {template[y+3][x] -=1;}
+		if(y-3 >= 0 && template[y-3][x] != -1) {template[y-3][x] -=1;}
+		if((x+2 <= 9 && y+2 <= 9) && template[y+2][x+2] != -1) {template[y+2][x+2] -=1;}
+		if((x+2 <= 9 && y-2 >= 0) && template[y-2][x+2] != -1) {template[y-2][x+2] -=1;}
+		if((x-2 >= 0 && y+2 <= 9) && template[y+2][x-2] != -1) {template[y+2][x-2] -=1;}
+		if((x-2 >= 0 && y-2 >= 0) && template[y-2][x-2] != -1) {template[y-2][x-2] -=1;}
 	}
 	
 	//Oyunu gösterme
@@ -170,5 +153,6 @@ public class FillTheFieldGame {
 			System.out.println();
 		}
 		System.out.println("\n\n");
+		
 	}
 }
